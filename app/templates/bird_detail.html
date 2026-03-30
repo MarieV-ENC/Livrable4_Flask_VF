@@ -132,6 +132,9 @@
         {% if current_user.is_authenticated %}
 
             <form method="post">
+        
+                <!-- AJOUT : token CSRF obligatoire pour les formulaires POST avec Flask-WTF -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="mb-3">
                     <label class="form-label">Ton commentaire</label>
                     <textarea

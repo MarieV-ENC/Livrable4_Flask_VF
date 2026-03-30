@@ -23,7 +23,6 @@
                         <label for="bird_name" class="form-label">Nom de l'oiseau</label>
                         <select id="bird_name" name="bird_name" class="form-select">
                             <option value="">Tous</option>
-                            <!-- Options remplies dynamiquement avec les surnoms -->
                         </select>
                     </div>
 
@@ -251,13 +250,13 @@
         toutesLesDonnees = await (await fetch("/static/data/data_js.json")).json();
 
         // Modification pour avoir les noms mis a jour depuis surnoms.json
-    const surnoms = await (await fetch("/static/data/surnoms.json")).json();
+    const surnoms = await (await fetch("/recherche/base")).json();
 
-        remplirFiltres(toutesLesDonnees, surnoms); //ajout de surnoms pour relié avec json
+        remplirFiltres(toutesLesDonnees, surnoms); 
         afficherDonnees(toutesLesDonnees);
     }
 
-    // Écouter le bouton Rechercher
+    // Bouton Rechercher
     document.getElementById('btn-rechercher').addEventListener('click', appliquerFiltres);
 
     // Lancer le chargement

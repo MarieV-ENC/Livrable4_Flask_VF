@@ -13,7 +13,7 @@ def to_bool(s):
 
 class Config:
     DEBUG = to_bool(os.environ.get("DEBUG"))
-    SECRET_KEY = os.environ.get("SECRET_KEY") #suppression de  ,"dev"
+    SECRET_KEY = os.environ.get("SECRET_KEY")
     SQLALCHEMY_DATABASE_URI = URL.create(
         drivername="postgresql+psycopg2",
         username=os.environ.get("DB_USER"),

@@ -1,6 +1,7 @@
 from datetime import datetime
 from ..app import db
 
+# mapping de la nouvelle table pour conserver les commentaires
 
 class Comment(db.Model):
     __tablename__ = "comment"

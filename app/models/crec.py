@@ -1,4 +1,4 @@
-# Déclaration de la BDD pour ORM
+# Mapping de la BDD
 from ..app import db
 
 # Bird detection
@@ -49,7 +49,7 @@ class Bird_detection (db.Model):
         lazy=True
     )
 
-# propriété de relation avec place
+    # propriété de relation avec place
 
     DetectionsPlace = db.relationship(
         "Place",

@@ -15,8 +15,10 @@ import os
 import json
 import csv
 
+# direction vers le template du même nom
+
 @app.route("/")
-def index():
+def index():    
     return render_template("index.html")
 
 
@@ -24,18 +26,23 @@ def index():
 def map_page():
     return render_template("map.html")
 
+# initialisation du formulaire vide avec la liste des id des faucons
 
 @app.route("/search")
 def search():
-    formulaire_oiseau = Recherche ()
-    surnoms_path = os.path.join(app.static_folder, 'data', 'surnoms.json')
-    with open(surnoms_path, 'r', encoding='utf-8') as f:
-        surnoms = json.load(f)
 
+    formulaire_oiseau = Recherche()
+
+    # récupération de la liste des id des faucons dans la BDD
+    falcons = Falcon.query.order_by(Falcon.falcon_code).all()
     formulaire_oiseau.code_faucon.choices = [('', '-- Tous --')] + [
-        (code, surnom) for code, surnom in surnoms.items()
+        (f.falcon_code, f.falcon_code)
+        for f in falcons
     ]
-    return render_template("search.html", form=formulaire_oiseau) 
+
+    return render_template("search.html", form=formulaire_oiseau)
+
+# saisie et vérification des informations de connexion
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -57,6 +64,7 @@ def login():
 
     return render_template("login.html")
 
+# créatin du compte uitilisateur
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -96,6 +104,7 @@ def register():
 
     return render_template("register.html")
 
+# déconnexion 
 
 @app.route("/logout")
 @login_required
@@ -104,49 +113,47 @@ def logout():
     flash("Vous êtes déconnecté.")
     return redirect(url_for("index"))
 
-# modif de cette route pour avoir str 
+# fiche d'information des faucons
+
 @app.route("/bird/<falcon_id>", methods=["GET", "POST"])
 def bird_detail(falcon_id):
-    import csv
-    import json
-    import os
 
-    # Charger les surnoms
-    surnoms_path = os.path.join(app.static_folder, 'data', 'surnoms.json')
-    with open(surnoms_path, 'r', encoding='utf-8') as f:
-        surnoms = json.load(f)
+# récupération du faucon avec son id
 
-    # Récupérer les infos de l'oiseau depuis le CSV
+    falcon = Falcon.query.filter_by(falcon_code=falcon_id).first()
     bird = None
-    with open('donnees.csv', 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            if row['individual-local-identifier'] == falcon_id:
-                bird = {
-                    'falcon_id': falcon_id,
-                    'falcon_code': falcon_id,
-                    'nickname': surnoms.get(falcon_id, 'NONE'),
-                    'tag_id': row.get('tag-local-identifier', None),
-                    'espece': row.get('individual-taxon-canonical-name', 'Non renseignée')
-                }
-                break  # on s'arrête dès qu'on a trouvé l'oiseau
+    if falcon:
+# données renseignées dans la fiche
+        bird = {
+            'falcon_id': falcon_id,
+            'falcon_code': falcon_id,
+            'nickname': falcon.nickname if falcon.nickname else falcon_id,
+            'tag_id': falcon.tag_id,
+            'espece': 'Non renseignée'
+        }
+# gestion des commentaires ( autorisation utilisateurs, création, sauvegarde et classement chronologique )
+    if request.method == "POST" and current_user.is_authenticated:
+        content = request.form.get("comment", "").strip()
+        if content and falcon:
+            comment = Comment(
+                content=content,
+                user_id=current_user.user_id,
+                falcon_id=falcon.falcon_id
+            )
+            db.session.add(comment)
+            db.session.commit()
+            flash("Commentaire publié.")
+        return redirect(url_for("bird_detail", falcon_id=falcon_id))
 
-    return render_template("bird_detail.html", bird=bird, comments=[])
+    comments = []
+    if falcon:
+        comments = Comment.query.filter_by(
+            falcon_id=falcon.falcon_id
+        ).order_by(Comment.created_at.desc()).all()
 
+    return render_template("bird_detail.html", bird=bird, comments=comments)
 
-
-
-@app.route("/bird")
-def bird_detail_first():
-    falcon = Falcon.query.first()
-
-    return render_template(
-        "bird_detail.html",
-        bird=falcon,
-        comments=[]
-    )
-
-
+# affichage des profils utilisateurs connectés
 
 @app.route("/profile")
 @login_required
@@ -171,9 +178,6 @@ def methodology():
 @app.route("/dataviz")
 def dataviz():
     return render_template("dataviz.html")
-
-
-
 
 
 @app.route("/legal")
@@ -205,31 +209,35 @@ def list_falcon():
         sous_titre="tous nos pigeons"
     )
 
+# recherche détaillée à multiples critères
+
 @app.route("/recherche", methods=['GET'])
 @app.route("/recherche/<int:page>", methods=['GET'])
 def recherche(page=1):
     form = Recherche()
 
-    # Chargement dynamique des choix depuis surnoms.json
-    surnoms_path = os.path.join(app.static_folder, 'data', 'surnoms.json')
-    with open(surnoms_path, 'r', encoding='utf-8') as f:
-        surnoms = json.load(f)
+# appel des id dans le menu déroulant, connecté avec la BDD
 
+    falcons = Falcon.query.order_by(Falcon.falcon_code).all()
     form.code_faucon.choices = [('', '-- Tous --')] + [
-        (code, surnom) for code, surnom in surnoms.items()
+        (f.falcon_code, f.falcon_code)
+        for f in falcons
     ]
 
+# filtres de recherche
     code_faucon = clean_arg(request.args.get("code_faucon", None))
-    date_filtre = clean_arg(request.args.get("date", None))
+    date_filtre = clean_arg(request.args.get("date_filtre", None))
     place_filtre = clean_arg(request.args.get("place", None))
 
-    # date_obj défini AVANT form.date_filtre.data
+# conversion en string pour éviter bug avec int au niveau de la date 
+
     date_obj = None
     if date_filtre:
         try:
             date_obj = datetime.strptime(date_filtre, "%Y-%m-%d").date()
         except ValueError:
             pass
+# préremplissage 
 
     form.code_faucon.data = code_faucon
     form.date_filtre.data = date_obj
@@ -237,16 +245,18 @@ def recherche(page=1):
 
     donnees = []
 
+# lancement de la requête
     if code_faucon or date_obj or place_filtre:
         query_results = db.session.query(Bird_detection)
 
+# filtre id
         if code_faucon:
             query_results = query_results.join(
                 Falcon, Falcon.falcon_id == Bird_detection.falcon_id
             ).filter(
                 Falcon.falcon_code.ilike("%" + code_faucon.lower() + "%")
             )
-
+# filtre date
         if date_obj:
             from datetime import time
             debut = datetime.combine(date_obj, time(0, 0, 0))
@@ -255,14 +265,14 @@ def recherche(page=1):
                 Bird_detection.time >= debut,
                 Bird_detection.time < fin
             )
-
+# filtre place
         if place_filtre:
             query_results = query_results.join(
                 Place, Place.place_id == Bird_detection.place_id
             ).filter(
                 Place.space_label.ilike("%" + place_filtre.lower() + "%")
             )
-
+# pagination
         donnees = query_results \
             .order_by(Bird_detection.time) \
             .paginate(page=page, per_page=app.config["DETECTIONS_PER_PAGE"])
@@ -276,27 +286,30 @@ def recherche(page=1):
 def birds():
     form = Modification()
 
-    surnoms_path = os.path.join(app.static_folder, 'data', 'surnoms.json')
-    with open(surnoms_path, 'r', encoding='utf-8') as f:
-        surnoms = json.load(f)
-
+    falcons = Falcon.query.order_by(Falcon.falcon_code).all()
     form.code_faucon.choices = [('', '-- Tous --')] + [
-        (code, surnom) for code, surnom in surnoms.items()
+        (f.falcon_code, f.nickname if f.nickname else f.falcon_code)
+        for f in falcons
     ]
+
+# modification du surnom des faucons
 
     if form.validate_on_submit():
         code_faucon = clean_arg(request.form.get("code_faucon", None))
         nom_faucon = clean_arg(request.form.get("nom_faucon", None))
 
-        surnoms[code_faucon] = nom_faucon
+        falcon = Falcon.query.filter_by(falcon_code=code_faucon).first()
 
-        with open(surnoms_path, 'w', encoding='utf-8') as f:
-            json.dump(surnoms, f, ensure_ascii=False, indent=2)
+        if falcon:
+            falcon.nickname = nom_faucon
+            db.session.commit()
+            flash(f"Surnom « {nom_faucon} » enregistré pour {code_faucon}.")
+        else:
+            flash(f"Faucon introuvable : {code_faucon}.", "warning")
 
-        flash(f"Surnom « {nom_faucon} » enregistré avec succès.")
         return redirect(url_for("birds"))
 
-    # GET — chargement des oiseaux
+    # liste des faucons avec leur couleurs et surnoms
     couleurs = [
         '#e41a1c', '#377eb8', '#4daf4a', '#984ea3',
         '#ff7f00', '#a65628', '#f781bf', '#999999',
@@ -304,27 +317,26 @@ def birds():
     ]
 
     oiseaux = []
-    seen = set()
-
-    with open('donnees.csv', 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            identifiant = row['individual-local-identifier']
-            if identifiant not in seen:
-                seen.add(identifiant)
-                oiseaux.append({
-                    'falcon_id': identifiant,
-                    'falcon_code': identifiant,
-                    'nickname': surnoms.get(identifiant, 'NONE'),
-                    'tag_id': row.get('tag-local-identifier', None),
-                    'espece': row.get('individual-taxon-canonical-name', 'Non renseignée'),
-                    'couleur': couleurs[len(oiseaux) % len(couleurs)]
-                })
+    for i, falcon in enumerate(falcons):
+        oiseaux.append({
+            'falcon_id': falcon.falcon_code,
+            'falcon_code': falcon.falcon_code,
+            'nickname': falcon.nickname if falcon.nickname else falcon.falcon_code,
+            'tag_id': falcon.tag_id,
+            'espece': 'Non renseignée',
+            'couleur': couleurs[i % len(couleurs)]
+        })
 
     return render_template("birds.html",
         sous_titre="Fiches oiseaux",
         birds=oiseaux,
         form=form)
 
-
-        
+# précharge les id dans la bare de recherche de la carte
+@app.route("/recherche/base")
+def recherche_base():
+    falcons = Falcon.query.order_by(Falcon.falcon_code).all()
+    return {
+        f.falcon_code: f.falcon_code
+        for f in falcons
+    }
