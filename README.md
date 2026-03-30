@@ -96,6 +96,73 @@ SECRET_KEY=dev
 
 ## 7. Vérifier que la base PostgreSQL existe
 
+Pour installer la base de donnée crec à partir du dossier Livrable_3_Traitement_donnes
+
+1. Créer un environnement virtuel
+
+```bash
+python -m venv env
+```
+
+2. Activer l’environnement
+
+Linux / Mac :
+
+```bash
+source env/bin/activate
+```
+
+Windows :
+
+```bash
+source env/Scripts/activate
+```
+
+3. Installer les dépendances
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Configurer le fichier `.env`
+
+Copier le fichier `.env.example` en `.env`, puis adapter les valeurs à votre configuration locale.
+
+```env
+pgHost=127.0.0.1
+pgPort=5432
+pgUser=postgres
+pgPassword=YOUR_PASSWORD
+pgDatabase=crec
+pgSchemaImportsCsv=crec
+failOnFirstSqlError=True
+failOnFirstCsvError=True
+```
+
+5. Lancer le projet
+
+```bash
+python run.py
+```
+
+Le script :
+
+- crée la base si nécessaire,
+- importe les CSV,
+- exécute les scripts SQL automatiquement dans l’ordre alphabétique.
+
+---
+
+Résumé (exécution rapide)
+
+```bash
+python -m venv env
+source env/bin/activate   # Windows : source env/Scripts/activate
+pip install -r requirements.txt
+python run.py
+```
+
+
 La base utilisée est :
 
 **crec**
