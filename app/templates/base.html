@@ -25,6 +25,15 @@
         {% include 'partials/navbar.html' %}
 
         <main class="container py-4 flex-grow-1">
+            <!-- ajout pour debugger le non affichage du message d'erreur -->
+             <main class="container py-4 flex-grow-1">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
             {% block content %}{% endblock %}
         </main>
 

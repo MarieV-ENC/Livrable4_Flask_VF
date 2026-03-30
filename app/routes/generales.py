@@ -189,26 +189,6 @@ def legal():
 def page_not_found(error):
     return render_template("404.html"), 404
 
-
-@app.route("/falcon")
-def list_falcon():
-    from ..models.crec import Falcon
-
-    donnees = []
-
-    for f in Falcon.query.all():
-        donnees.append({
-            "falcon_code": f.falcon_code,
-            "tag_id": f.tag_id,
-            "nickname": f.nickname
-        })
-
-    return render_template(
-        "falcon_test.html",  
-        donnees=donnees,
-        sous_titre="tous nos pigeons"
-    )
-
 # recherche détaillée à multiples critères
 
 @app.route("/recherche", methods=['GET'])
