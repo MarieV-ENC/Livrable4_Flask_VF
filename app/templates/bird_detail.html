@@ -3,24 +3,29 @@
 {% block title %}Fiche oiseau{% endblock %}
 
 {% block extra_head %}
+    <!-- Chargement du fichier CSS de Leaflet pour l'affichage de la carte -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
 {% endblock %}
 
 {% block content %}
 
+<!-- Bloc principal contenant les informations détaillées de l'oiseau -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
 
+    <!-- Titre de la page -->
     <h1 class="mb-3">Fiche oiseau</h1>
 
+    <!-- Vérifie qu'un oiseau a bien été transmis au template -->
     {% if bird %}
 
+        <!-- Organisation en deux colonnes : informations + carte -->
         <div class="row g-4">
 
             <!-- COLONNE INFOS -->
             <div class="col-lg-6">
                 <div class="bird-detail-box p-4 rounded h-100">
 
-                    <!-- Icône et nom -->
+                    <!-- Icône décorative représentant l'oiseau -->
                     <div style="text-align: center; margin-bottom: 20px;">
                         <div style="
                             width: 80px;
@@ -37,16 +42,20 @@
                         </div>
                     </div>
 
+                    <!-- Affiche le surnom de l'oiseau s'il existe, sinon son code -->
                     <h2 class="h4 mb-3" style="text-align: center;">
                         {{ bird.nickname if bird.nickname != "NONE" else bird.falcon_code }}
                     </h2>
 
+                    <!-- Informations générales sur l'oiseau -->
                     <p><strong>Espèce :</strong>
                         <span class="text-primary">{{ bird.espece }}</span>
                     </p>
+
                     <p><strong>Identifiant balise :</strong>
                         {{ bird.tag_id if bird.tag_id else "Non renseigné" }}
                     </p>
+
                     <p><strong>Code faucon :</strong>
                         <span style="
                             background-color: #4CAF50;
@@ -57,8 +66,11 @@
                             {{ bird.falcon_code }}
                         </span>
                     </p>
+
+                    <!-- Pour l'instant aucune donnée sur le dernier passage -->
                     <p><strong>Dernier passage :</strong> Non renseigné</p>
 
+                    <!-- Petit texte descriptif fixe -->
                     <h3 class="h6 mt-4 mb-2">Description</h3>
                     <p class="mb-0">
                         Cet individu fait partie du suivi GPS réalisé dans le cadre du projet
@@ -74,9 +86,13 @@
             <div class="col-lg-6">
                 <div class="bird-detail-box p-4 rounded h-100">
 
+                    <!-- Titre de la zone de carte -->
                     <h2 class="h5 mb-3">Carte du passage</h2>
 
+                    <!-- Élément HTML dans lequel Leaflet affichera la carte -->
                     <div id="bird-map" style="height: 350px; width: 100%; border-radius: 8px;"></div>
+
+                    <!-- Message affiché uniquement si aucune donnée n'est trouvée -->
                     <p id="bird-map-message" class="text-muted mt-3 mb-0" style="display: none;">
                         Aucune donnée de trajectoire disponible pour cet oiseau.
                     </p>
@@ -88,6 +104,7 @@
 
     {% else %}
 
+        <!-- Message affiché si aucun oiseau n'a été trouvé -->
         <div class="alert alert-light border mb-0">
             Aucun oiseau n'est disponible pour le moment.
         </div>
@@ -96,45 +113,57 @@
 
 </section>
 
-
+<!-- Bloc des commentaires -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
 
     <h2 class="h4 mb-3">Commentaires</h2>
 
     {% if bird %}
 
+        <!-- Vérifie s'il existe déjà des commentaires -->
         {% if comments %}
 
+            <!-- Parcours tous les commentaires de cet oiseau -->
             {% for comment in comments %}
 
                 <div class="comment-item mb-3 pb-3 border-bottom">
+
+                    <!-- Nom de l'auteur et date de publication -->
                     <p class="mb-1">
                         <strong>{{ comment.author.username }}</strong>
                         <span class="text-muted">
                             — {{ comment.created_at.strftime('%d/%m/%Y à %H:%M') }}
                         </span>
                     </p>
+
+                    <!-- Contenu du commentaire -->
                     <p class="mb-0">{{ comment.content }}</p>
+
                 </div>
 
             {% endfor %}
 
         {% else %}
 
+            <!-- Message si aucun commentaire n'a encore été publié -->
             <p class="text-muted">
                 Aucun commentaire pour cet oiseau pour le moment.
             </p>
 
         {% endif %}
 
+        <!-- Formulaire d'ajout de commentaire -->
         <h3 class="h6 mt-4 mb-3">Ajouter un commentaire</h3>
 
+        <!-- Seuls les utilisateurs connectés peuvent publier -->
         {% if current_user.is_authenticated %}
 
             <form method="post">
-        
-                <!-- AJOUT : token CSRF obligatoire pour les formulaires POST avec Flask-WTF -->
+
+                <!-- Token CSRF obligatoire pour sécuriser le formulaire -->
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <!-- Zone de saisie du commentaire -->
                 <div class="mb-3">
                     <label class="form-label">Ton commentaire</label>
                     <textarea
@@ -145,6 +174,8 @@
                         required
                     ></textarea>
                 </div>
+
+                <!-- Bouton d'envoi -->
                 <button class="btn btn-search">
                     Publier le commentaire
                 </button>
@@ -152,6 +183,7 @@
 
         {% else %}
 
+            <!-- Message invitant l'utilisateur à se connecter -->
             <div class="alert alert-light border text-center">
                 <p class="mb-3 text-muted">
                     Connecte-toi pour laisser un commentaire.
@@ -165,6 +197,7 @@
 
     {% else %}
 
+        <!-- Aucun commentaire possible si aucun oiseau n'est affiché -->
         <p class="text-muted mb-0">
             Les commentaires seront disponibles lorsqu'un oiseau pourra être affiché.
         </p>
@@ -173,17 +206,28 @@
 
 </section>
 
+<!-- Le script de carte n'est chargé que si un oiseau existe -->
 {% if bird %}
+
+<!-- Chargement de Leaflet JS -->
 <script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
+
 <script>
+
+    // Indique à Leaflet où trouver les images des marqueurs par défaut
     L.Icon.Default.imagePath = '/static/img/leaflet/';
 
+    // Récupération du code de l'oiseau actuellement affiché
     const birdCode = {{ bird.falcon_code|tojson }};
+
+    // Références vers les éléments HTML utiles
     const mapMessage = document.getElementById('bird-map-message');
     const mapContainer = document.getElementById('bird-map');
 
+    // Création de la carte centrée sur la France par défaut
     const map = L.map('bird-map').setView([46.5, 2.5], 5);
 
+    // Ajout du fond de carte Stadia Maps
     L.tileLayer(
         'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}?api_key=b94835d3-8f22-4194-ac81-e8601fe34b24',
         {
@@ -194,16 +238,19 @@
         }
     ).addTo(map);
 
-    // Fonction de génération du popup
+    // Fonction qui construit le contenu HTML de la popup d'un point
     function genererPopUp(feature, layer) {
+
+        // Récupère la date et l'heure depuis le timestamp
         const timestamp = feature.properties.timestamp || "";
         const morceaux = timestamp.split(" ");
         const date = morceaux[0] || "Non renseignée";
         const heure = morceaux[1] ? morceaux[1].split(".")[0] : "Non renseignée";
 
-        // Utiliser le surnom si disponible
+        // Utilise le surnom si disponible, sinon le nom ou le code
         const nomAffiche = feature.properties.surnom || feature.properties.nom || birdCode;
 
+        // HTML affiché dans la popup Leaflet
         const popupContent = `
             <div style="width: 220px;">
                 <h3 style="text-align: center;
@@ -264,26 +311,30 @@
             </div>
         `;
 
+        // Associe la popup au marqueur
         layer.bindPopup(popupContent);
     }
 
-    // Afficher le trajet de l'oiseau
+    // Fonction principale qui récupère et affiche la trajectoire de l'oiseau
     async function afficherTrajetOiseau() {
+
+        // Chargement du fichier GeoJSON contenant toutes les positions
         const response = await fetch("/static/data/data_js.json");
         const data = await response.json();
 
-        // Filtrer les données pour cet oiseau uniquement
+        // Filtre uniquement les points correspondant à l'oiseau actuel
         const featuresOiseau = data.features.filter(function(feature) {
             return feature.properties.nom === birdCode;
         });
 
+        // Si aucun point n'est trouvé, on masque la carte
         if (!featuresOiseau.length) {
             mapContainer.style.display = "none";
             mapMessage.style.display = "block";
             return;
         }
 
-        // Tracer la ligne
+        // Prépare les coordonnées pour tracer la ligne de migration
         const coordonnees = featuresOiseau.map(function(feature) {
             return [
                 feature.geometry.coordinates[1],
@@ -291,14 +342,16 @@
             ];
         });
 
+        // Trace la ligne reliant tous les points
         const ligne = L.polyline(coordonnees, {
             color: "#4CAF50",
             weight: 3,
             opacity: 0.8
         }).addTo(map);
 
-        // Tracer les points avec popup
+        // Ajoute un marqueur sur chaque point du trajet
         featuresOiseau.forEach(function(feature) {
+
             const latlng = [
                 feature.geometry.coordinates[1],
                 feature.geometry.coordinates[0]
@@ -310,15 +363,19 @@
                 fillOpacity: 0.8
             }).addTo(map);
 
+            // Ajoute une popup au marqueur
             genererPopUp(feature, marker);
         });
 
-        // Centrer la carte sur le trajet
+        // Recentre automatiquement la carte sur la trajectoire
         map.fitBounds(ligne.getBounds(), { padding: [20, 20] });
     }
 
+    // Lance immédiatement l'affichage de la trajectoire
     afficherTrajetOiseau();
+
 </script>
+
 {% endif %}
 
 {% endblock %}

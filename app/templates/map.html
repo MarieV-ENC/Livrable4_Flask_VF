@@ -3,11 +3,13 @@
 {% block title %}Carte des trajectoires{% endblock %}
 
 {% block extra_head %}
+    <!-- Chargement du CSS de Leaflet pour afficher la carte interactive -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
 {% endblock %}
 
 {% block content %}
 
+<!-- Titre principal de la page -->
 <h1 class="mb-4">Carte des trajectoires</h1>
 
 <div class="row g-4">
@@ -16,9 +18,12 @@
     <div class="col-lg-3">
         <div class="card shadow-sm h-100">
             <div class="card-body">
+
+                <!-- Bloc de filtres permettant de limiter les données affichées -->
                 <h2 class="h5 mb-3">Filtres</h2>
                 <form method="get" class="row g-3">
 
+                    <!-- Filtre par oiseau -->
                     <div class="col-md-6">
                         <label for="bird_name" class="form-label">Nom de l'oiseau</label>
                         <select id="bird_name" name="bird_name" class="form-select">
@@ -26,11 +31,13 @@
                         </select>
                     </div>
 
+                    <!-- Filtre par date -->
                     <div class="col-md-6">
                         <label for="date" class="form-label">Date</label>
                         <input type="date" id="date" name="date" class="form-control">
                     </div>
 
+                    <!-- Bouton de lancement des filtres -->
                     <div class="col-12">
                         <button type="button" id="btn-rechercher" class="btn btn-search">
                             Rechercher
@@ -46,7 +53,10 @@
     <div class="col-lg-9">
         <div class="card shadow-sm">
             <div class="card-body">
+
+                <!-- Zone d'affichage de la carte -->
                 <h2 class="h5 mb-3">Carte interactive des trajectoires d'oiseaux</h2>
+
                 <!-- Conteneur de la carte -->
                 <div id="map" style="height: 600px; width: 100%; border-radius: 8px;"></div>
             </div>
@@ -58,9 +68,10 @@
 <!-- Import Leaflet JS -->
 <script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
 <script>
+    // Dossier contenant les images par défaut de Leaflet
     L.Icon.Default.imagePath = '/static/img/leaflet/';
 
-    // Palette de couleurs
+    // Palette de couleurs utilisée pour différencier les oiseaux
     const couleurs = [
         '#e41a1c', '#377eb8', '#4daf4a', '#984ea3',
         '#ff7f00', '#a65628', '#f781bf', '#999999'
@@ -79,10 +90,11 @@
         ext: 'png'
     }).addTo(map);
 
-    // Stockage des données et des couches
+    // Stockage des données complètes et des couches actuellement affichées
     let toutesLesDonnees = null;
     let couchesActives = [];
 
+    // Remplit dynamiquement le filtre des oiseaux à partir des données et des surnoms
     // modification pour lier dynamiquement les noms
    function remplirFiltres(data, surnoms) {
     const oiseaux = {};
@@ -101,6 +113,7 @@
 }
     
 
+    // Génère le contenu de la popup affichée sur chaque point de passage
     // Popup 
     function genererPopUp(feature, layer) {
         layer.on({
@@ -172,6 +185,7 @@
     }
    
 
+    // Affiche sur la carte uniquement les données fournies après filtrage éventuel
     // Afficher les données filtrées sur la carte
     function afficherDonnees(data) {
         couchesActives.forEach(c => map.removeLayer(c));
@@ -224,6 +238,7 @@
         });
     }
 
+    // Applique les filtres sélectionnés dans le formulaire
     // Appliquer les filtres
     function appliquerFiltres() {
         const nomSelectionne = document.getElementById('bird_name').value;
@@ -245,6 +260,7 @@
         afficherDonnees({ type: "FeatureCollection", features: featuresFiltrees });
     }
 
+    // Charge les données au démarrage puis initialise la carte et les filtres
     // Chargement initial des données
     async function recupererDonnees() {
         toutesLesDonnees = await (await fetch("/static/data/data_js.json")).json();
@@ -256,6 +272,7 @@
         afficherDonnees(toutesLesDonnees);
     }
 
+    // Associe le bouton Rechercher à l'application des filtres
     // Bouton Rechercher
     document.getElementById('btn-rechercher').addEventListener('click', appliquerFiltres);
 

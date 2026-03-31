@@ -4,21 +4,28 @@
 
 {% block content %}
 
+<!-- Introduction générale de la page méthodologique -->
 <section class="bg-white rounded shadow-sm p-5 mb-4">
     <div class="row g-4 align-items-center">
         <div class="col-lg-8">
+
+            <!-- Titre principal -->
             <h1 class="display-6 fw-bold mb-3">Méthodologie</h1>
+
+            <!-- Présentation synthétique de la page -->
             <p class="lead mb-3">
                 Cette page présente la logique de construction des données exploitées dans l’application
                 <strong>Voie de Crécerelle</strong>, depuis la collecte des jeux de données bruts jusqu’à leur
                 transformation en base relationnelle interrogeable par le web.
             </p>
+
             <p class="mb-0">
                 Le projet repose sur un croisement entre données animalières, météorologiques et géographiques
                 afin de mieux comprendre les trajectoires migratoires de faucons crécerelles observés en Espagne.
             </p>
         </div>
 
+        <!-- Encadré récapitulatif -->
         <div class="col-lg-4">
             <div class="method-highlight p-4 rounded">
                 <h2 class="h5 mb-3">En bref</h2>
@@ -35,6 +42,7 @@
 </section>
 
 
+<!-- Partie 1 : contexte scientifique et objectif -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h2 class="h3 mb-3">1. Contexte scientifique et objectif du projet</h2>
 
@@ -60,12 +68,15 @@
 </section>
 
 
+<!-- Partie 2 : définition du périmètre d'étude -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h2 class="h3 mb-4">2. Périmètre d’étude</h2>
 
     <div class="row g-4">
         <div class="col-md-6">
             <div class="method-card h-100 p-4 rounded">
+
+                <!-- Sous-partie sur le corpus retenu -->
                 <h3 class="h5 mb-3">Le groupe étudié</h3>
                 <p class="mb-0">
                     Le corpus étudié regroupe une trentaine de faucons crécerelles en migration
@@ -78,6 +89,8 @@
 
         <div class="col-md-6">
             <div class="method-card h-100 p-4 rounded">
+
+                <!-- Sous-partie expliquant le recentrage géographique -->
                 <h3 class="h5 mb-3">Le choix de l’Espagne</h3>
                 <p class="mb-0">
                     Même si les trajets couvrent un espace migratoire plus vaste,
@@ -91,10 +104,13 @@
 </section>
 
 
+<!-- Partie 3 : présentation des sources de données -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h2 class="h3 mb-4">3. Origine des jeux de données</h2>
 
     <div class="row g-4">
+
+        <!-- Source 1 : Movebank -->
         <div class="col-lg-4">
             <div class="data-source-box h-100 p-4 rounded">
                 <h3 class="h4 mb-3">
@@ -123,6 +139,7 @@
             </div>
         </div>
 
+        <!-- Source 2 : AEMET -->
         <div class="col-lg-4">
             <div class="data-source-box h-100 p-4 rounded">
                 <h3 class="h4 mb-3">
@@ -150,6 +167,7 @@
             </div>
         </div>
 
+        <!-- Source 3 : Wikidata -->
         <div class="col-lg-4">
             <div class="data-source-box h-100 p-4 rounded">
                 <h3 class="h4 mb-3">
@@ -179,6 +197,7 @@
 </section>
 
 
+<!-- Partie 4 : explication de la construction de la base -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h2 class="h3 mb-4">4. Construction de la base relationnelle</h2>
 
@@ -194,6 +213,7 @@
         la consultation web.
     </p>
 
+    <!-- Étape 1 du pipeline -->
     <div class="pipeline-step mb-4">
         <h3 class="h5 mb-3">Étape 1 — Staging et nettoyage</h3>
 
@@ -224,6 +244,7 @@
         </p>
     </div>
 
+    <!-- Étape 2 du pipeline -->
     <div class="pipeline-step mb-4">
         <h3 class="h5 mb-3">Étape 2 — Création des tables finales</h3>
 
@@ -240,6 +261,7 @@
         </ul>
     </div>
 
+    <!-- Étape 3 du pipeline -->
     <div class="pipeline-step mb-4">
         <h3 class="h5 mb-3">Étape 3 — Enrichissement des relations</h3>
 
@@ -262,6 +284,7 @@
         </p>
     </div>
 
+    <!-- Étape 4 du pipeline -->
     <div class="pipeline-step mb-4">
         <h3 class="h5 mb-3">Étape 4 — Vues analytiques</h3>
 
@@ -285,6 +308,7 @@
         </p>
     </div>
 
+    <!-- Étape 5 du pipeline -->
     <div class="pipeline-step">
         <h3 class="h5 mb-3">Étape 5 — Nettoyage final</h3>
 
@@ -301,12 +325,15 @@
 </section>
 
 
+<!-- Partie 10 : choix techniques côté application web -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h2 class="h3 mb-4">10. Choix techniques pour l’application web</h2>
 
     <div class="row g-4">
         <div class="col-md-6">
             <div class="method-card h-100 p-4 rounded">
+
+                <!-- Bloc sur la structure pensée pour Flask -->
                 <h3 class="h5 mb-3">Une base pensée pour Flask</h3>
                 <p class="mb-0">
                     La base n’a pas été conçue comme une simple archive de données,
@@ -319,6 +346,8 @@
 
         <div class="col-md-6">
             <div class="method-card h-100 p-4 rounded">
+
+                <!-- Bloc sur les enjeux de lisibilité et de performance -->
                 <h3 class="h5 mb-3">Lisibilité et performance</h3>
                 <p class="mb-0">
                     Les choix de filtrage, de réduction du volume, d’enrichissement relationnel
@@ -332,6 +361,7 @@
 </section>
 
 
+<!-- Partie 11 : lien entre travail de traitement et expérience utilisateur -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h2 class="h3 mb-4">11. Du jeu de données brut à l’expérience utilisateur</h2>
 
@@ -354,6 +384,7 @@
 </section>
 
 
+<!-- Conclusion de la page -->
 <section class="bg-white rounded shadow-sm p-4">
     <h2 class="h3 mb-3">12. Conclusion</h2>
 

@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<!-- Introduction de la page de datavisualisation -->
 <section class="dataviz-hero bg-white rounded shadow-sm p-5 mb-4">
     <div class="row align-items-center g-4">
         <div class="col-lg-8">
@@ -19,6 +20,7 @@
             </p>
         </div>
 
+        <!-- Encadré résumant les visualisations proposées -->
         <div class="col-lg-4">
             <div class="dataviz-side-note p-4 rounded">
                 <h2 class="h5 mb-3">Ce que montre cette page</h2>
@@ -33,6 +35,7 @@
 </section>
 
 
+<!-- Première visualisation : température et nombre de détections -->
 <section class="viz-card bg-white rounded shadow-sm p-4 mb-5">
     <div class="viz-header mb-4">
         <h2 class="h4 mb-2">1. Influence de la température sur l’intensité des détections</h2>
@@ -48,6 +51,7 @@
         migratoires, tout en faisant apparaître des écarts selon les provinces.
     </p>
 
+    <!-- Intégration de la première visualisation Tableau -->
     <div class="tableauPlaceholder viz-frame" id="viz1773329126074" style="position: relative;">
         <noscript>
             <a href="#">
@@ -65,6 +69,7 @@
         </object>
     </div>
 
+    <!-- Chargement du script nécessaire à l'affichage de la visualisation -->
     <script type="text/javascript">
         var divElement = document.getElementById('viz1773329126074');
         var vizElement = divElement.getElementsByTagName('object')[0];
@@ -76,6 +81,7 @@
         vizElement.parentNode.insertBefore(scriptElement, vizElement);
     </script>
 
+    <!-- Interprétation des résultats de la visualisation -->
     <div class="analysis-box mt-4 p-4 rounded">
         <h3 class="h5 mb-3">Analyse</h3>
 
@@ -105,6 +111,7 @@
 </section>
 
 
+<!-- Deuxième visualisation : heatmap des zones de concentration -->
 <section class="viz-card bg-white rounded shadow-sm p-4 mb-5">
     <div class="viz-header mb-4">
         <h2 class="h4 mb-2">2. Distribution spatiale des détections</h2>
@@ -119,6 +126,7 @@
         et de mettre en évidence les régions les plus marquées par l’activité migratoire.
     </p>
 
+    <!-- Intégration de la deuxième visualisation Tableau -->
     <div class="tableauPlaceholder viz-frame" id="viz1773329166828" style="position: relative;">
         <noscript>
             <a href="#">
@@ -136,6 +144,7 @@
         </object>
     </div>
 
+    <!-- Chargement du script Tableau -->
     <script type="text/javascript">
         var divElement = document.getElementById('viz1773329166828');
         var vizElement = divElement.getElementsByTagName('object')[0];
@@ -147,6 +156,7 @@
         vizElement.parentNode.insertBefore(scriptElement, vizElement);
     </script>
 
+    <!-- Analyse de la heatmap -->
     <div class="analysis-box mt-4 p-4 rounded">
         <h3 class="h5 mb-3">Analyse</h3>
 
@@ -175,6 +185,7 @@
 </section>
 
 
+<!-- Troisième visualisation : carte des passages migratoires -->
 <section class="viz-card bg-white rounded shadow-sm p-4 mb-4">
     <div class="viz-header mb-4">
         <h2 class="h4 mb-2">3. Cartographie des passages migratoires</h2>
@@ -190,6 +201,7 @@
         des itinéraires empruntés.
     </p>
 
+    <!-- Intégration de la troisième visualisation Tableau -->
     <div class="tableauPlaceholder viz-frame" id="viz1773329188623" style="position: relative;">
         <noscript>
             <a href="#">
@@ -207,6 +219,7 @@
         </object>
     </div>
 
+    <!-- Chargement du script Tableau -->
     <script type="text/javascript">
         var divElement = document.getElementById('viz1773329188623');
         var vizElement = divElement.getElementsByTagName('object')[0];
@@ -218,6 +231,7 @@
         vizElement.parentNode.insertBefore(scriptElement, vizElement);
     </script>
 
+    <!-- Analyse de la carte des passages -->
     <div class="analysis-box mt-4 p-4 rounded">
         <h3 class="h5 mb-3">Analyse</h3>
 

@@ -1,32 +1,56 @@
 {% extends "base.html" %}
+
 {% block title %}Connexion{% endblock %}
+
 {% block content %}
+
+<!-- Conteneur centré horizontalement -->
 <div class="row justify-content-center">
+
+    <!-- Colonne limitant la largeur du formulaire -->
     <div class="col-md-6 col-lg-5">
+
+        <!-- Carte Bootstrap contenant le formulaire de connexion -->
         <div class="card shadow-sm">
             <div class="card-body p-4">
+
+                <!-- Titre de la page -->
                 <h1 class="h3 text-center mb-4">Connexion</h1>
+
+                <!-- Formulaire de connexion envoyé en POST -->
                 <form method="post">
-                    <!-- AJOUT : token CSRF obligatoire pour les formulaires POST avec Flask-WTF -->
+
+                    <!-- Token CSRF obligatoire pour sécuriser le formulaire -->
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <!-- Champ permettant de saisir soit le nom d'utilisateur soit l'adresse mail -->
                     <div class="mb-3">
                         <label for="login" class="form-label">Identifiant ou adresse mail</label>
                         <input type="text" id="login" name="login" class="form-control">
                     </div>
+
+                    <!-- Champ du mot de passe -->
                     <div class="mb-3">
                         <label for="password" class="form-label">Mot de passe</label>
                         <input type="password" id="password" name="password" class="form-control">
                     </div>
+
+                    <!-- Bouton de validation du formulaire -->
                     <button type="submit" class="btn btn-explore w-100">
                         Se connecter
                     </button>
                 </form>
+
+                <!-- Lien vers la page d'inscription -->
                 <p class="text-center mt-3 mb-0">
                     Pas encore de compte ?
                     <a href="{{ url_for('register') }}">S'inscrire</a>
                 </p>
+
             </div>
         </div>
+
     </div>
 </div>
+
 {% endblock %}

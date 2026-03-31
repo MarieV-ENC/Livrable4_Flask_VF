@@ -1,65 +1,96 @@
+<!-- Barre de navigation principale du site -->
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+
     <div class="container">
+
+        <!-- Nom du site cliquable menant vers la page d'accueil -->
         <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
             Voie de Crécerelle
         </a>
 
+        <!-- Bouton affiché sur mobile pour ouvrir/fermer le menu -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarMain" aria-controls="navbarMain"
                 aria-expanded="false" aria-label="Ouvrir la navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- Contenu du menu repliable -->
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto align-items-lg-center">
 
+                <!-- Lien vers la page d'accueil -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('index') }}">Accueil</a>
                 </li>
 
+                <!-- Menu déroulant regroupant les pages d'exploration -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="explorerDropdown"
                        role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Explorer
                     </a>
+
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="explorerDropdown">
+
+                        <!-- Lien vers la carte -->
                         <li>
                             <a class="dropdown-item" href="{{ url_for('map_page') }}">Carte</a>
                         </li>
+
+                        <!-- Lien vers la recherche -->
                         <li>
                             <a class="dropdown-item" href="{{ url_for('search') }}">Recherche</a>
                         </li>
+
+                        <!-- Lien vers les fiches oiseaux -->
                         <li>
                             <a class="dropdown-item" href="{{ url_for('birds') }}">Fiches oiseaux</a>
                         </li>
+
+                        <!-- Lien vers les datavisualisations -->
                         <li>
                             <a class="dropdown-item" href="{{ url_for('dataviz') }}">Datavisualisations</a>
                         </li>
                     </ul>
                 </li>
 
+                <!-- Lien vers la page méthodologie -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('methodology') }}">Méthodologie</a>
                 </li>
 
+                <!-- Partie affichée si l'utilisateur est connecté -->
                 {% if current_user.is_authenticated %}
+
+                    <!-- Menu déroulant utilisateur -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                             {{ current_user.username }}
                         </a>
+
                         <ul class="dropdown-menu dropdown-menu-end">
+
+                            <!-- Lien vers le profil -->
                             <li>
                                 <a class="dropdown-item" href="{{ url_for('profile') }}">Profil</a>
                             </li>
+
+                            <!-- Lien de déconnexion -->
                             <li>
                                 <a class="dropdown-item" href="{{ url_for('logout') }}">Déconnexion</a>
                             </li>
+
                         </ul>
                     </li>
+
                 {% else %}
+
+                    <!-- Lien de connexion si aucun utilisateur n'est connecté -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('login') }}">Connexion</a>
                     </li>
+
                 {% endif %}
 
             </ul>

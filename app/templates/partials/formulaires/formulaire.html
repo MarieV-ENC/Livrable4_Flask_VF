@@ -1,32 +1,52 @@
-<!--Template de la recherche multiple par formulaire-->
+<!-- Template du formulaire de recherche multicritère -->
 <form action="{{url_for('recherche')}}" method="get" name="recherche">
 
+    <!-- Champs cachés générés automatiquement par Flask-WTF -->
+    <!-- notamment le token CSRF -->
     {{form.hidden_tag()}}
 
+    <!-- Champ de sélection du faucon -->
     <div class="form-group">
+
+        <!-- Libellé affiché au-dessus du champ -->
         <label for="code_faucon"> Identifiant de l'individu </label>
+
+        <!-- Liste déroulante remplie côté Flask -->
         {{form.code_faucon(class="form-control") }}
-        <small id="code_faucon" class="form-text text-muted"> Séléctionner l'identifiant du faucon</small>
+
+        <!-- Texte d'aide sous le champ -->
+        <small id="code_faucon" class="form-text text-muted">
+            Séléctionner l'identifiant du faucon
+        </small>
     </div>
 
+    <!-- Champ de filtrage par date -->
     <div class="form-group">
+
         <label for="date"> Date de passage </label>
+
+        <!-- Champ de date -->
         {{form.date_filtre(class="form-control", placeholder_="date") }}
-        <small id="date" class="form-text text-muted"> Séléctionner la date du passage</small>
+
+        <small id="date" class="form-text text-muted">
+            Séléctionner la date du passage
+        </small>
     </div>
 
+    <!-- Champ de recherche par lieu -->
     <div class="form-group">
+
         <label for="place"> Lieu de la détection </label>
+
+        <!-- Champ texte libre -->
         {{form.place(class="form-control", placeholder_="place") }}
-        <small id="place" class="form-text text-muted"> Séléctionner le lieu du passage</small>
+
+        <small id="place" class="form-text text-muted">
+            Séléctionner le lieu du passage
+        </small>
     </div>
 
+    <!-- Bouton d'envoi du formulaire -->
     <p><input type="submit" value="Rechercher"></p>
 
 </form>
-
-
-
-
-
- 

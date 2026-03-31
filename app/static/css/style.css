@@ -291,3 +291,56 @@ body {
     border: 1px solid #e7e1d7;
     border-radius: 12px;
 }
+
+
+/* =========================
+   ANIMATION FAUCON
+========================= */
+
+#faucon {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 340px;
+    z-index: 9999;
+    pointer-events: none;
+    transform: translate(-400px, -50%);
+    filter: drop-shadow(-140px 0 10px rgba(120,120,120,0.35));
+}
+
+.fly {
+    animation: flyAcross 2.2s cubic-bezier(.65,0,.35,1) forwards;
+}
+
+@keyframes flyAcross {
+    0% {
+        transform: translate(-400px, -50%);
+        filter: drop-shadow(-140px 0 10px rgba(120,120,120,0.35));
+    }
+
+    30% {
+        transform: translate(30vw, -65%);
+        filter: drop-shadow(-160px 8px 12px rgba(120,120,120,0.30));
+    }
+
+    55% {
+        transform: translate(55vw, -70%);
+        filter: drop-shadow(-190px 10px 14px rgba(120,120,120,0.28));
+    }
+
+    80% {
+        transform: translate(85vw, -60%);
+        filter: drop-shadow(-160px 8px 12px rgba(120,120,120,0.30));
+    }
+
+    100% {
+        transform: translate(120vw, -50%);
+        filter: drop-shadow(-140px 0 10px rgba(120,120,120,0.20));
+    }
+}
+
+/* flou seulement sur la page, pas sur l’oiseau */
+#page.page-transition {
+    filter: blur(6px);
+    transition: filter 0.6s ease;
+}

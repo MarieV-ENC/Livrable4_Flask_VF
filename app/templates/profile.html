@@ -4,10 +4,13 @@
 
 {% block content %}
 
+<!-- Section principale du profil utilisateur -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
 
+    <!-- Titre de la page -->
     <h1 class="mb-2">Mon profil</h1>
 
+    <!-- Petit texte d'introduction -->
     <p class="text-muted mb-4">
         Cette page regroupe les informations du compte utilisateur
         ainsi que les commentaires publiés dans l’application.
@@ -15,20 +18,25 @@
 
     <div class="row g-4">
 
+        <!-- Colonne de gauche : informations du compte -->
         <div class="col-lg-6">
 
             <div class="profile-box p-4 rounded h-100">
 
+                <!-- Bloc des informations personnelles -->
                 <h2 class="h5 mb-3">Informations personnelles</h2>
 
+                <!-- Nom d'utilisateur -->
                 <p>
                     <strong>Identifiant :</strong> {{ current_user.username }}
                 </p>
 
+                <!-- Adresse mail -->
                 <p>
                     <strong>Adresse mail :</strong> {{ current_user.email }}
                 </p>
 
+                <!-- Afficher la biographie uniquement si elle existe -->
                 {% if current_user.bio %}
 
                     <h3 class="h6 mt-4 mb-2">Présentation</h3>
@@ -44,20 +52,25 @@
         </div>
 
 
+        <!-- Colonne de droite : commentaires de l'utilisateur -->
         <div class="col-lg-6">
 
             <div class="profile-box p-4 rounded h-100">
 
+                <!-- Titre du bloc commentaires -->
                 <h2 class="h5 mb-3">Mes commentaires</h2>
 
+                <!-- Vérifie si l'utilisateur a déjà posté des commentaires -->
                 {% if comments %}
 
+                    <!-- Parcours de tous les commentaires -->
                     {% for comment in comments %}
 
                         <div class="comment-item mb-3 pb-3 border-bottom">
 
                             <p class="mb-1">
 
+                                <!-- Lien vers la fiche de l'oiseau concerné -->
                                 <strong>
                                     <a href="{{ url_for('bird_detail', falcon_id=comment.falcon.falcon_id) }}">
                                         Fiche oiseau :
@@ -65,12 +78,14 @@
                                     </a>
                                 </strong><br>
 
+                                <!-- Date et heure de publication du commentaire -->
                                 <span class="text-muted">
                                     {{ comment.created_at.strftime('%d/%m/%Y à %H:%M') }}
                                 </span>
 
                             </p>
 
+                            <!-- Contenu du commentaire -->
                             <p class="mb-0">
                                 {{ comment.content }}
                             </p>
@@ -81,6 +96,7 @@
 
                 {% else %}
 
+                    <!-- Message affiché si aucun commentaire n'existe -->
                     <p class="text-muted">
                         Vous n’avez pas encore publié de commentaires.
                     </p>

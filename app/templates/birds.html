@@ -2,6 +2,7 @@
 {% block title %}Fiches oiseaux{% endblock %}
 {% block content %}
 
+<!-- Présentation de la page et formulaire de modification -->
 <section class="bg-white rounded shadow-sm p-4 mb-4">
     <h1 class="mb-3">Fiches oiseaux</h1>
     <p class="text-muted mb-0">
@@ -9,19 +10,25 @@
         Chaque fiche permet de consulter les informations principales sur un individu
         et d'accéder aux commentaires laissés par les utilisateurs.
     </p>
+
+    <!-- Formulaire permettant de modifier le surnom d'un faucon -->
     <div>
-        {% include 'partials/formulaires/modification.html' %} 
+        {% include 'partials/formulaires/modification.html' %}
     </div>
 </section>
 
+<!-- Affichage des fiches oiseaux -->
 <section class="bg-white rounded shadow-sm p-4">
     {% if birds %}
         <div class="row g-4">
+
             {% for bird in birds %}
                 <div class="col-md-6 col-lg-4">
+
+                    <!-- Carte individuelle d'un oiseau -->
                     <div class="bird-card p-4 rounded h-100" style="border-top: 4px solid {{ bird.couleur }};">
 
-                        <!-- Icône oiseau avec couleur unique -->
+                        <!-- Icône de l'oiseau avec une couleur propre à chaque individu -->
                         <div style="text-align: center; margin-bottom: 15px;">
                             <div style="
                                 width: 70px;
@@ -38,18 +45,20 @@
                             </div>
                         </div>
 
-                        <!-- Nom -->
+                        <!-- Affichage du surnom ou du code du faucon -->
                         <h2 class="h5 mb-3" style="text-align: center; color: {{ bird.couleur }};">
                             {{ bird.nickname if bird.nickname != "NONE" else bird.falcon_code }}
                         </h2>
 
-                        <!-- Informations -->
+                        <!-- Informations principales sur le faucon -->
                         <p><strong>Espèce :</strong>
                             <span class="text-primary">{{ bird.espece }}</span>
                         </p>
+
                         <p><strong>Balise GPS :</strong>
                             {{ bird.tag_id if bird.tag_id else "Non renseignée" }}
                         </p>
+
                         <p class="mb-4"><strong>Code faucon :</strong>
                             <span style="
                                 background-color: {{ bird.couleur }};
@@ -61,17 +70,24 @@
                             </span>
                         </p>
 
-                       <a href="{{ url_for('bird_detail', falcon_id=bird.falcon_id) }}" class="btn btn-search"> <!--modif pour éviter erreur, passage au string-->
+                        <!-- Lien vers la fiche détaillée de l'oiseau -->
+                        <a href="{{ url_for('bird_detail', falcon_id=bird.falcon_id) }}" class="btn btn-search">
                             Voir la fiche
                         </a>
+
                     </div>
                 </div>
             {% endfor %}
+
         </div>
+
     {% else %}
+
+        <!-- Message affiché s'il n'y a aucun oiseau enregistré -->
         <p class="text-muted mb-0">
             Aucun oiseau n'est disponible pour le moment.
         </p>
+
     {% endif %}
 </section>
 

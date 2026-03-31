@@ -4,23 +4,31 @@
 
 {% block content %}
 
+<!-- Titre principal de la page -->
 <h1 class="mb-4">Recherche</h1>
 
+<!-- Carte contenant le formulaire de recherche -->
 <div class="card shadow-sm mb-4">
     <div class="card-body">
 
+        <!-- Inclusion du formulaire situé dans partials/formulaires/formulaire.html -->
         {% include 'partials/formulaires/formulaire.html' %}
 
     </div>
 </div>
 
+<!-- Carte contenant les résultats -->
 <div class="card shadow-sm">
     <div class="card-body">
 
+        <!-- Titre de la section résultats -->
         <h2 class="h5 mb-3">Résultats</h2>
 
+        <!-- Rend le tableau scrollable horizontalement sur petits écrans -->
         <div class="table-responsive">
             <table class="table table-striped">
+
+                <!-- En-têtes du tableau -->
                 <thead>
                     <tr>
                         <th>Oiseau</th>
@@ -30,57 +38,96 @@
                     </tr>
                 </thead>
 
-<tbody>
-      
-    {% if donnees and donnees.items %}
-        {% for detection in donnees.items %}
-        <tr>
-            <td>{{ detection.DetectionsFalcon.falcon_code }}</td>
-            <td>{{ detection.time.strftime('%d/%m/%Y %H:%M') if detection.time }}</td>
-            <td>{{ detection.DetectionsPlace.space_label if detection.DetectionsPlace }}</td>
-            <td>{{ detection.altitude if detection.altitude else "—" }}</td>
-        </tr>
-        {% endfor %}
-    {% else %}
-        <tr>
-            <td colspan="4" class="text-center text-muted">Aucun résultat.</td>
-        </tr>
-    {% endif %}
-</tbody>
+                <tbody>
+
+                    <!-- Vérifie qu'il existe des résultats dans la pagination -->
+                    {% if donnees and donnees.items %}
+
+                        <!-- Parcours de chaque détection retournée -->
+                        {% for detection in donnees.items %}
+                        <tr>
+
+                            <!-- Code du faucon -->
+                            <td>{{ detection.DetectionsFalcon.falcon_code }}</td>
+
+                            <!-- Date de détection formatée -->
+                            <td>{{ detection.time.strftime('%d/%m/%Y %H:%M') if detection.time }}</td>
+
+                            <!-- Nom du lieu si un lieu est associé -->
+                            <td>{{ detection.DetectionsPlace.space_label if detection.DetectionsPlace }}</td>
+
+                            <!-- Altitude si elle existe, sinon tiret -->
+                            <td>{{ detection.altitude if detection.altitude else "—" }}</td>
+                        </tr>
+                        {% endfor %}
+
+                    {% else %}
+
+                        <!-- Message affiché lorsqu'aucun résultat n'est trouvé -->
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Aucun résultat.</td>
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
 
             </table>
+
+            <!-- Affichage de la pagination seulement s'il y a plusieurs pages -->
             {% if donnees and donnees.pages > 1 %}
-<nav class="mt-3">
-    <ul class="pagination justify-content-center">
+            <nav class="mt-3">
+                <ul class="pagination justify-content-center">
 
-        {% if donnees.has_prev %}
-        <li class="page-item">
-            <a class="page-link" href="{{ url_for('recherche', page=donnees.prev_num, code_faucon=request.args.get('code_faucon',''), date_filtre=request.args.get('date_filtre',''), place=request.args.get('place','')) }}">←</a>
-        </li>
-        {% endif %}
+                    <!-- Bouton page précédente -->
+                    {% if donnees.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ url_for('recherche', page=donnees.prev_num, code_faucon=request.args.get('code_faucon',''), date_filtre=request.args.get('date_filtre',''), place=request.args.get('place','')) }}">
+                            ←
+                        </a>
+                    </li>
+                    {% endif %}
 
-        {% for p in donnees.iter_pages() %}
-            {% if p %}
-            <li class="page-item {% if p == donnees.page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('recherche', page=p, code_faucon=request.args.get('code_faucon',''), date_filtre=request.args.get('date_filtre',''), place=request.args.get('place','')) }}">{{ p }}</a>
-            </li>
-            {% else %}
-            <li class="page-item disabled"><span class="page-link">…</span></li>
+                    <!-- Liste des numéros de page -->
+                    {% for p in donnees.iter_pages() %}
+
+                        {% if p %}
+                        <li class="page-item {% if p == donnees.page %}active{% endif %}">
+                            <a class="page-link"
+                               href="{{ url_for('recherche', page=p, code_faucon=request.args.get('code_faucon',''), date_filtre=request.args.get('date_filtre',''), place=request.args.get('place','')) }}">
+                                {{ p }}
+                            </a>
+                        </li>
+
+                        {% else %}
+
+                        <!-- Affichage des points de suspension quand des pages sont masquées -->
+                        <li class="page-item disabled">
+                            <span class="page-link">…</span>
+                        </li>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <!-- Bouton page suivante -->
+                    {% if donnees.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ url_for('recherche', page=donnees.next_num, code_faucon=request.args.get('code_faucon',''), date_filtre=request.args.get('date_filtre',''), place=request.args.get('place','')) }}">
+                            →
+                        </a>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
             {% endif %}
-        {% endfor %}
 
-        {% if donnees.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="{{ url_for('recherche', page=donnees.next_num, code_faucon=request.args.get('code_faucon',''), date_filtre=request.args.get('date_filtre',''), place=request.args.get('place','')) }}">→</a>
-        </li>
-        {% endif %}
-
-    </ul>
-</nav>
-{% endif %}
         </div>
 
     </div>
 </div>
 
-{% endblock %} 
+{% endblock %}

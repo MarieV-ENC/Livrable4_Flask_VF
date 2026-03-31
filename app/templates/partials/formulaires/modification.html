@@ -1,20 +1,39 @@
-<!--Template de la modification, généré-->
+<!-- Template du formulaire permettant de modifier le surnom d'un faucon -->
 <form action="{{ url_for('birds') }}" method="POST" name="modification">
+
+    <!-- Champs cachés générés automatiquement par Flask-WTF -->
+    <!-- notamment le token CSRF -->
     {{ form.hidden_tag() }}
     
+    <!-- Bloc de sélection du faucon -->
     <div class="form-group">
+
+        <!-- Titre du formulaire -->
         <h1>Nomme ton faucon !</h1>
         
+        <!-- Liste déroulante contenant les faucons disponibles -->
         <label for="code_faucon">Faucon</label>
         {{ form.code_faucon(class_="form-control") }}
-        <small class="form-text text-muted">Choisir le faucon à renommer</small>
+
+        <!-- Texte d'aide -->
+        <small class="form-text text-muted">
+            Choisir le faucon à renommer
+        </small>
     </div>
 
+    <!-- Bloc de saisie du nouveau surnom -->
     <div class="form-group">
+
+        <!-- Champ texte pour entrer le nouveau nom -->
         <label for="nom_faucon">Nouveau nom</label>
         {{ form.nom_faucon(class_="form-control", placeholder="Nouveau surnom") }}
-        <small class="form-text text-muted">Entrer le nouveau nom du faucon</small>
+
+        <!-- Texte d'aide -->
+        <small class="form-text text-muted">
+            Entrer le nouveau nom du faucon
+        </small>
     </div>
 
+    <!-- Bouton d'envoi du formulaire -->
     <p><input type="submit" value="Renommer"></p>
 </form>

@@ -1,16 +1,26 @@
+<!-- Formulaire de filtrage utilisé pour la recherche ou la carte -->
 <form method="get" class="row g-3">
 
+    <!-- Champ de sélection de l'oiseau -->
     <div class="col-md-6">
         <label for="bird_name" class="form-label">Nom de l'oiseau</label>
+
         <select id="bird_name" name="bird_name" class="form-select">
+            <!-- Valeur par défaut : afficher tous les oiseaux -->
             <option value="">Tous</option>
-            <!-- Options remplies dynamiquement avec les surnoms -->
+
+            <!-- Les autres options sont ajoutées automatiquement en JavaScript -->
+            <!-- à partir des surnoms récupérés dans les données -->
         </select>
     </div>
+
+    <!-- Champ de filtrage par date -->
     <div class="col-md-6">
         <label for="date" class="form-label">Date</label>
         <input type="date" id="date" name="date" class="form-control">
     </div>
+
+    <!-- Bouton déclenchant la recherche -->
     <div class="col-12">
         <button type="button" id="btn-rechercher" class="btn btn-search">
             Rechercher
