@@ -26,6 +26,6 @@ document.querySelectorAll('a').forEach(function(link) {
         // Attend la fin de l'animation avant de changer de page
         setTimeout(function() {
             window.location.href = link.href;
-        }, 700);
+        }, 2200);
     });
 });
