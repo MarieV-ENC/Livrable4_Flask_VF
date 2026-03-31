@@ -1,0 +1,8 @@
+#!/home/vielmas/Desktop/M2_TNAH/Voie_crecerelle_project/Livrable4_Flask_VF/env/bin/python3
+# -*- coding: utf-8 -*-
+import re
+import sys
+from flask.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

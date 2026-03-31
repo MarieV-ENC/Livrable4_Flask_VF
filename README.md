@@ -22,6 +22,17 @@ L'application a été créée par :
 | 01/03/2026       | Livrable n°4    | datavisualisation et journal de bord |
 | 31/03/2026       | Livrable n°5    | application python    |
 
+# Fonctinnalités de l'application
+
+Les principales fonctionnalités développées pour l'application :
+
+- requêtage des données de la base de données à partir de critères prédéfinis
+- affichage des données sous la forme d’un tableau associé à un formulaire
+- fonction de modification et d'écriture des données, à savoir modification des id des faucons en surnoms
+- une data visualisation interactive et dynamique développée en javascript permettant de visualiser les trajets des faucons ainsi que plusieurs autres métadonnées sous la forme de pop-up
+- création, gestion d'un profil utilisateur
+
+
 # Premiers pas avec l'application Flask
 
 ## Installer l'application en local
