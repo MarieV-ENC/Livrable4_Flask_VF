@@ -1,31 +1,79 @@
-# Application Flask — Lancer le serveur en local
+# 🦅 Migration animale 🦅
+
+Le projet VOIE DE CRÉCERELLE cherche à déterminer et à mettre en valeur l’impact de l’activité humaine sur la migration d’un groupe de faucons crécerelles (Falco tinnunculus) en croisant des données animalières, géographiques et météorologiques.
+
+Entre 2021 et 2023, la station biologique du parc national de Doñana (EDB) en Andalousie, en collaboration avec le Conseil supérieur de la recherche scientifique (CSIC), a équipé un échantillon de faucons crécerelles de balises GPS afin d’étudier leurs déplacements. Ce jeu de données sera croisé avec les relevés météorologiques issus de l'Agence d'État de météorologie espagnole (AEMET) ainsi qu’avec des données géographiques de Wikidata (espaces urbains, densité de population, reliefs…).
+
+La base de données sera accessible via une interface web. Les données seront présentées sous la forme de données structurées et de datavisualisation afin de sensibiliser sur l’impact de l’homme sur l'éthologie de ces rapaces.
+
+# L'équipe 👩🏻‍💻✍🏻💡
+
+L'application a été créée par :
+- Marie Vielmas
+- Clara Martin
+- Fanny Suszko
+- Aristide Curtelin
+
+# Deadlines du projet 📓
+
+|Date              | Livrable        | Type de rendu         |
+|------------------|-----------------|-----------------------|
+| 15/02/2026       | Livrable n°3    | traitement de données |
+| 01/03/2026       | Livrable n°4    | datavisualisation et journal de bord |
+| 31/03/2026       | Livrable n°5    | application python    |
+
+# Premiers pas avec l'application Flask
+
+## Installer l'application en local
 
 ## 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/CMartinArchives/Flask_versionClara.git
-cd Flask_versionClara
+git clone git@github.com:MarieV-ENC/Livrable4_Flask_VF.git
+cd Livrable4_Flask_VF.git
 ```
 
 ---
 
-## 2. Créer un environnement virtuel
+## 2. Paraéméterer la base de donnée crec
+
+Réalisez la procédure décrite dans le README.md du Livrable_3_Traitements_donnees afin de générer la base de donnée 'crec' sur laquelle s'appuient les fonctionnalités de l'application.
+
+Résumé pour une exécution rapide :
+
+```crec
+cd Livrable_3_Traitements_donnees
+python -m venv env
+source env/Scripts/activate
+pip install -r requirements.txt
+python run.py
+```
+Veillez à copier le fichier `.env.example` en `.env`, puis adapter les valeurs à votre configuration locale (en particulier le mot de passe de votre session postgres)
+
+Le script python run.py :
+
+- crée la base si nécessaire,
+- importe les CSV,
+- exécute les scripts SQL automatiquement dans l’ordre alphabétique.
+
+## 2. Paramétrer l'application Flask
+
+1. Créer un environnement virtuel
 
 ```bash
+cd Livrable4_Flask_VF
 python3 -m venv env
 source env/bin/activate
 ```
-
 ---
 
-## 3. Installer les dépendances de l'application
+3. Installer les dépendances de l'application
 
 ```bash
 pip install -r requirements.txt
 ```
-
 ---
-## 4. Installations pour visualiser la carte interactive en javascript
+4. Visualiser la carte interactive en javascript
 
 Télécharger et installer Node.js (version LTS) à l'adresse https://nodejs.org/fr/download et télécharger la version LTS
 
@@ -66,17 +114,20 @@ npm install leaflet
 
 Les fichiers Leaflet leaflet.css, leaflet.js et les images associées contenues dans node_modules/leaflet/dist doivent être placés dans le dossier static de l'application (dans ce git ces fichiers sont dors et déjà au bon emplacement).
 
-## 5. Générrer le fichier GeoJSON
-La carte interactive utilise les données sur le faucons contenues dans le fichier donnees.csv, données converties au format json (fichier data_js.json) par le script csv_to_geojson.py.
+5. Générrer le fichier GeoJSON
+
+La carte interactive utilise certaines données sur les faucons contenues dans le fichier donnees.csv, données converties au format json (fichier data_js.json) par le script csv_to_geojson.py.
 
 Pour obtenir le fichier data_js.json par l'exécution du script csv_to_geojson.py :
 
 ```script csv to json
 python csv_to_geojson.py
 ```
-Dans ce dépôt git le fichier data_js.json est déjà prêt à l'emploi
+Dans ce dépôt git le fichier data_js.json est déjà prêt à l'emploi.
 
-## 6. Configurer les variables d’environnement
+Note : les donnees ont dans un premier temps été converties du format csv au format json afin de permettre la gestion automatique des points de géolocation (latitude, longitude) par les fonctionnalités de leaflet. En raison du volume des données, il n'est volontairement pris en compte qu'un 1 passage sur 1000 afin de favoriser une meilleure lisibilité de la carte dynamique. Certains paramètres de filtres ont été reliés dans un second temps directement aux données contenues dans la BDD crec.
+
+6. Configurer les variables d’environnement pour relier l'app à la BDD crec
 
 Transformer le fichier envexample en fichier .env à la racine du projet (ne pas oublier de préciser son mot de passe) :
 
@@ -91,83 +142,11 @@ DB_NAME=crec
 
 SECRET_KEY=dev
 ```
-
 ---
-
-## 7. Vérifier que la base PostgreSQL existe
-
-Pour installer la base de donnée crec à partir du dossier Livrable_3_Traitement_donnes
-
-1. Créer un environnement virtuel
-
-```bash
-python -m venv env
-```
-
-2. Activer l’environnement
-
-Linux / Mac :
-
-```bash
-source env/bin/activate
-```
-
-Windows :
-
-```bash
-source env/Scripts/activate
-```
-
-3. Installer les dépendances
-
-```bash
-pip install -r requirements.txt
-```
-
-4. Configurer le fichier `.env`
-
-Copier le fichier `.env.example` en `.env`, puis adapter les valeurs à votre configuration locale.
-
-```env
-pgHost=127.0.0.1
-pgPort=5432
-pgUser=postgres
-pgPassword=YOUR_PASSWORD
-pgDatabase=crec
-pgSchemaImportsCsv=crec
-failOnFirstSqlError=True
-failOnFirstCsvError=True
-```
-
-5. Lancer le projet
-
-```bash
-python run.py
-```
-
-Le script :
-
-- crée la base si nécessaire,
-- importe les CSV,
-- exécute les scripts SQL automatiquement dans l’ordre alphabétique.
-
----
-
-Résumé (exécution rapide)
-
-```bash
-python -m venv env
-source env/bin/activate   # Windows : source env/Scripts/activate
-pip install -r requirements.txt
-python run.py
-```
-
-
-La base utilisée est :
 
 **crec**
 
-Les tables principales du projet sont :
+Les tables principales de la BDD crec utilisées pour le projet sont :
 
 - `crec.falcon`
 - `crec.bird_detection`
@@ -201,7 +180,7 @@ CREATE TABLE crec.comment (
 
 ---
 
-## 8. Lancer le serveur Flask
+7. Lancer le serveur Flask
 
 
 ```bash
@@ -214,7 +193,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 9. Arrêter le serveur
+8. Arrêter le serveur
 
 Dans le terminal :
 
