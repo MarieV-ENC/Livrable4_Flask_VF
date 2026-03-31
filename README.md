@@ -35,7 +35,7 @@ cd Livrable4_Flask_VF.git
 
 ---
 
-## 2. Paraéméterer la base de donnée crec
+## 2. Paramétrer la base de donnée crec
 
 Réalisez la procédure décrite dans le README.md du Livrable_3_Traitements_donnees afin de générer la base de donnée 'crec' sur laquelle s'appuient les fonctionnalités de l'application.
 
@@ -195,6 +195,4 @@ http://127.0.0.1:5000
 
 8. Arrêter le serveur
 
-Dans le terminal :
-
-Ctrl + C
+Dans le terminal : Ctrl + C
